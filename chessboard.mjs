@@ -26,7 +26,7 @@ export const chessboard = (function () {
 
   function addBoardPositions(lastCoordinates, newCoordinates) {
     const index = getIndex(lastCoordinates[0], lastCoordinates[1]);
-    for (coordinate of newCoordinates) {
+    for (let coordinate of newCoordinates) {
       const currentIndex = getIndex(coordinate[0], coordinate[1]);
       if (!board[index]) {
         board[index] = [];
@@ -38,3 +38,5 @@ export const chessboard = (function () {
 
   return { getBoard, getBoardPositions, clearBoard, addBoardPositions };
 })();
+
+//TODO: need to add checks to make sure positions outside the board are not being added
