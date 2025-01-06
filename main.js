@@ -1,3 +1,3 @@
 import { knightMoves } from "./knight.mjs";
 
-knightMoves([0, 1], [0, 2]);
+knightMoves([0, 1], [1, 3]);

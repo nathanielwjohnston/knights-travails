@@ -24,5 +24,35 @@ export function knightMoves(startCoordinates, endCoordinates) {
     return moves;
   }
 
-  console.log(calculateMoves([0, 1]));
+  function populateBoard(startCoordinates, endCoordinates) {
+    let movesTaken = 0;
+    let coordinatesArray = [startCoordinates];
+    while (true) {
+      movesTaken += 1;
+      const coordArrayCopy = coordinatesArray;
+      coordinatesArray = [];
+      for (let coordinates of coordArrayCopy) {
+        let moves = calculateMoves(coordinates);
+        coordinatesArray.push(...moves);
+        chessboard.addBoardPositions(coordinates, moves);
+      }
+
+      // Can this be put in for loop or will it cut short the necessary moves?
+      if (
+        coordinatesArray.find(
+          (element) =>
+            element[0] === endCoordinates[0] && element[1] === endCoordinates[1]
+        )
+      ) {
+        break;
+      }
+    }
+
+    return movesTaken;
+  }
+
+  const movesTaken = populateBoard(startCoordinates, endCoordinates);
+  console.log(movesTaken);
+  const board = chessboard.getBoard();
+  console.log(board);
 }
