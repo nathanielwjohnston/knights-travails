@@ -24,7 +24,7 @@ export function knightMoves(startCoordinates, endCoordinates) {
     return moves;
   }
 
-  function populateBoard(startCoordinates, endCoordinates) {
+  function populateBoard() {
     let movesTaken = 0;
     let coordinatesArray = [startCoordinates];
     while (true) {
@@ -32,6 +32,9 @@ export function knightMoves(startCoordinates, endCoordinates) {
       const coordArrayCopy = coordinatesArray;
       coordinatesArray = [];
       for (let coordinates of coordArrayCopy) {
+        if (chessboard.checkPositionsFilled(coordinates)) {
+          continue;
+        }
         let moves = calculateMoves(coordinates);
         coordinatesArray.push(...moves);
         chessboard.addBoardPositions(coordinates, moves);
@@ -51,8 +54,80 @@ export function knightMoves(startCoordinates, endCoordinates) {
     return movesTaken;
   }
 
-  const movesTaken = populateBoard(startCoordinates, endCoordinates);
-  console.log(movesTaken);
-  const board = chessboard.getBoard();
-  console.log(board);
+  function getPath(moves, startCoordinates) {
+    const nextMoves = chessboard.getBoardPositions(
+      startCoordinates[0],
+      startCoordinates[1]
+    );
+
+    // Any way to prevent checking coordinates already checked earlier on in the path?
+    for (let nextMove of nextMoves) {
+      if (
+        moves === 1 &&
+        nextMove[0] === endCoordinates[0] &&
+        nextMove[1] === endCoordinates[1]
+      ) {
+        return [nextMove];
+      }
+
+      // If this is the last move and it is not the end coord, skip to the next move
+      if (moves === 1) continue;
+
+      const path = getPath(moves - 1, nextMove);
+      if (path) {
+        const joinedPath = [nextMove].concat(path);
+        return joinedPath;
+      }
+    }
+
+    // End coordinates not on this path
+    return false;
+  }
+
+  // I haven't written getPath yet, but I wish I could find a way to get the path
+  // either when calculating moves or in the populate board function - without actually
+  // populating the board
+  const movesTaken = populateBoard();
+  console.log(getPath(movesTaken, startCoordinates));
 }
+
+// This definitely doesn't work at the moment - look at diagram in book
+
+// I think I need to restart this - would having a visited attribute for nodes help?s
+// function getPath(moves, startCoordinates) {
+//   console.log(startCoordinates);
+//   const nextMoves = chessboard.getBoardPositions(
+//     startCoordinates[0],
+//     startCoordinates[1]
+//   );
+
+//   let path;
+
+//   console.log(nextMoves);
+
+//   for (let nextMove of nextMoves) {
+//     if (nextMove[0] === undefined) {
+//       break;
+//     }
+//     console.log(nextMove);
+//     path = [nextMove];
+
+//     // ie if next move is the last one
+//     if (
+//       moves === 1 &&
+//       nextMove[0] === endCoordinates[0] &&
+//       nextMove[1] === endCoordinates[1]
+//     )
+//       break;
+
+//     const followingPath = getPath(moves - 1, nextMove);
+//     if (followingPath) {
+//       path.push(followingPath);
+//       break;
+//     }
+//   }
+
+//   console.log(`Path: ${path}`);
+
+//   return path;
+// }

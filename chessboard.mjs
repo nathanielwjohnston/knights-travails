@@ -16,8 +16,28 @@ export const chessboard = (function () {
 
   function getBoardPositions(column, row) {
     const index = getIndex(column, row);
+    // Need to create shallow copy otherwise changing positions will also change board[index]
+    // positions would just have a reference to the same object as board[index] and would
+    // thus also change it.
+    const positions = [...board[index]];
 
-    return board[index];
+    for (let [index, position] of positions.entries()) {
+      let positionColumn;
+      let positionRow;
+      for (let i = 0; i < boardLength; i++) {
+        for (let j = 0; j < boardLength; j++) {
+          // If spot is in this column
+          if (position === i * boardLength + j) {
+            positionColumn = i;
+            positionRow = j;
+          }
+        }
+      }
+
+      positions[index] = [positionColumn, positionRow];
+    }
+
+    return positions;
   }
 
   function clearBoard() {
@@ -36,7 +56,22 @@ export const chessboard = (function () {
     }
   }
 
-  return { getBoard, getBoardPositions, clearBoard, addBoardPositions };
+  function checkPositionsFilled(coordinates) {
+    const index = getIndex(coordinates[0], coordinates[1]);
+    const positions = board[index];
+
+    if (positions) return true;
+
+    return false;
+  }
+
+  return {
+    getBoard,
+    getBoardPositions,
+    clearBoard,
+    addBoardPositions,
+    checkPositionsFilled,
+  };
 })();
 
 //TODO: need to add checks to make sure positions outside the board are not being added
