@@ -73,5 +73,3 @@ export const chessboard = (function () {
     checkPositionsFilled,
   };
 })();
-
-//TODO: need to add checks to make sure positions outside the board are not being added

@@ -15,6 +15,7 @@ export function knightMoves(startCoordinates, endCoordinates) {
 
         const newX = x + operand;
         const newY = y + secondOperand;
+        // If move on board
         if (newX >= 0 && newX <= 7 && newY >= 0 && newY <= 7) {
           moves.push([newX, newY]);
         }
@@ -40,7 +41,6 @@ export function knightMoves(startCoordinates, endCoordinates) {
         chessboard.addBoardPositions(coordinates, moves);
       }
 
-      // Can this be put in for loop or will it cut short the necessary moves?
       if (
         coordinatesArray.find(
           (element) =>
@@ -92,49 +92,29 @@ export function knightMoves(startCoordinates, endCoordinates) {
       console.log(move);
     }
   }
+
+  if (
+    startCoordinates[0] < 0 ||
+    startCoordinates[0] > 7 ||
+    startCoordinates[1] < 0 ||
+    startCoordinates[1] > 7
+  ) {
+    console.log("Your starting coordinates fall outside the board!");
+    return;
+  }
+
+  if (
+    endCoordinates[0] < 0 ||
+    endCoordinates[0] > 7 ||
+    endCoordinates[1] < 0 ||
+    endCoordinates[1] > 7
+  ) {
+    console.log("Your end coordinates fall outside the board!");
+    return;
+  }
+
   const movesTaken = populateBoard();
   const path = [startCoordinates, ...getPath(movesTaken, startCoordinates)];
 
   outputPath(movesTaken, path);
 }
-
-// This definitely doesn't work at the moment - look at diagram in book
-
-// I think I need to restart this - would having a visited attribute for nodes help?s
-// function getPath(moves, startCoordinates) {
-//   console.log(startCoordinates);
-//   const nextMoves = chessboard.getBoardPositions(
-//     startCoordinates[0],
-//     startCoordinates[1]
-//   );
-
-//   let path;
-
-//   console.log(nextMoves);
-
-//   for (let nextMove of nextMoves) {
-//     if (nextMove[0] === undefined) {
-//       break;
-//     }
-//     console.log(nextMove);
-//     path = [nextMove];
-
-//     // ie if next move is the last one
-//     if (
-//       moves === 1 &&
-//       nextMove[0] === endCoordinates[0] &&
-//       nextMove[1] === endCoordinates[1]
-//     )
-//       break;
-
-//     const followingPath = getPath(moves - 1, nextMove);
-//     if (followingPath) {
-//       path.push(followingPath);
-//       break;
-//     }
-//   }
-
-//   console.log(`Path: ${path}`);
-
-//   return path;
-// }
