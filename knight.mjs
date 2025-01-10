@@ -53,15 +53,15 @@ export function knightMoves(startCoordinates, endCoordinates) {
 
     return movesTaken;
   }
-
-  function getPath(moves, startCoordinates) {
+  function getPath(moves, coordinates, leadPath = []) {
     const nextMoves = chessboard.getBoardPositions(
-      startCoordinates[0],
-      startCoordinates[1]
+      coordinates[0],
+      coordinates[1]
     );
 
-    // Any way to prevent checking coordinates already checked earlier on in the path?
-    for (let nextMove of nextMoves) {
+    leadPath.push(coordinates);
+
+    movesLoop: for (let nextMove of nextMoves) {
       if (
         moves === 1 &&
         nextMove[0] === endCoordinates[0] &&
@@ -70,10 +70,18 @@ export function knightMoves(startCoordinates, endCoordinates) {
         return [nextMove];
       }
 
-      // If this is the last move and it is not the end coord, skip to the next move
+      // Checks if this current board square (nextMove) is already in path
+      // If it is, then going over it again could not give the shortest path
+      for (let element of leadPath) {
+        if (nextMove[0] === element[0] && nextMove[1] === element[1]) {
+          continue movesLoop;
+        }
+      }
+
+      // If this is the last move and it is not the end coord, skip to the next possible move
       if (moves === 1) continue;
 
-      const path = getPath(moves - 1, nextMove);
+      const path = getPath(moves - 1, nextMove, leadPath);
       if (path) {
         const joinedPath = [nextMove].concat(path);
         return joinedPath;
