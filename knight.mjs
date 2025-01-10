@@ -84,11 +84,18 @@ export function knightMoves(startCoordinates, endCoordinates) {
     return false;
   }
 
-  // I haven't written getPath yet, but I wish I could find a way to get the path
-  // either when calculating moves or in the populate board function - without actually
-  // populating the board
+  function outputPath(movesTaken, path) {
+    console.log(`This path takes ${movesTaken} moves.`);
+    console.log("This was the path taken:");
+
+    for (let move of path) {
+      console.log(move);
+    }
+  }
   const movesTaken = populateBoard();
-  console.log(getPath(movesTaken, startCoordinates));
+  const path = [startCoordinates, ...getPath(movesTaken, startCoordinates)];
+
+  outputPath(movesTaken, path);
 }
 
 // This definitely doesn't work at the moment - look at diagram in book
