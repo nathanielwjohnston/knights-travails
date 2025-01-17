@@ -23,6 +23,42 @@ export function knightMoves(startCoordinates, endCoordinates) {
     return moves;
   }
 
+  function getPath(coordinatesArray) {
+    const nextMoves = [];
+    const coordinatesObject = [];
+
+    for (let coordinates of coordinatesArray) {
+      if (
+        coordinates[0] === endCoordinates[0] &&
+        coordinates[1] === endCoordinates[1]
+      ) {
+        return [coordinates];
+      }
+      const moves = calculateMoves(coordinates);
+
+      nextMoves.push(...moves);
+
+      coordinatesObject[coordinates] = moves;
+    }
+
+    const path = getPath(nextMoves);
+
+    console.log(path);
+
+    // Check which coordinates in coordinatesArray has a child in this path
+    // - should be the first child
+
+    for (let coordinates in coordinatesObject) {
+      for (let nextMove of coordinatesObject[coordinates]) {
+        if (path[0][0] === nextMove[0] && path[0][1] === nextMove[1]) {
+          const move = coordinates.split(",");
+          const intMove = move.map((str) => parseInt(str));
+          return [intMove, ...path];
+        }
+      }
+    }
+  }
+
   function outputPath(movesTaken, path) {
     console.log(`This path takes ${movesTaken} moves.`);
     console.log("This was the path taken:");
@@ -51,4 +87,7 @@ export function knightMoves(startCoordinates, endCoordinates) {
     console.log("Your end coordinates fall outside the board!");
     return;
   }
+
+  const path = getPath([startCoordinates]);
+  outputPath(path.length - 1, path);
 }

@@ -1,3 +1,4 @@
 import { knightMoves } from "./knight.mjs";
+import { knightMoves as upgradedMoves } from "./knightUpgrade.mjs";
 
-knightMoves([0, 0], [7, 7]);
+upgradedMoves([0, 0], [7, 7]);
